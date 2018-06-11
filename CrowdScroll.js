@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View, Text, Image, Dimensions, TouchableWithoutFeedback, Animated} from "react-native";
+import {View, Text, Image, Dimensions, TouchableWithoutFeedback, Animated,StatusBar} from "react-native";
 const ImageData='https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528437450780&di=efefa8e02727737abc77f61ba6fd20a9&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2F0df431adcbef7609c64a714b24dda3cc7dd99ea5.jpg'
 const dw = Dimensions.get('window').width;
 const dh = Dimensions.get('window').height;
@@ -14,6 +14,7 @@ export default class CrowdScroll extends Component{
         render(){
             return(
                 <View style={{backgroundColor:'white',flex:1}}>
+                    <StatusBar barStyle='light-content'/>
                     {this.renderHeader()}
                     <Animated.ScrollView
                         scrollEventThrottle={16}
@@ -22,11 +23,12 @@ export default class CrowdScroll extends Component{
                         // pointerEvents={'none'}
                         style={{
                             // flex:1,
+                            // height:dh+44,
                             backgroundColor:'transparent',
                             transform: [{
                                 translateY: this.state.scrollY.interpolate({
-                                    inputRange: [-255, 0, 255 - 44 ],
-                                    outputRange: [0 , 0, 44],
+                                    inputRange: [-255, 0, 255 ],
+                                    outputRange: [0 , 0, 0],//IOS 是0
                                     extrapolate: 'clamp',
                                 })
                             }]
@@ -35,9 +37,27 @@ export default class CrowdScroll extends Component{
                         onScroll={Animated.event([{nativeEvent: {contentOffset: {y: this.state.scrollY}}}])}
                         // onScroll={(e)=>{console.log(e.nativeEvent.contentOffset.y)}}
                     >
-                        <View style={{width:dw,height:245,backgroundColor:'transparent'}}></View>
-                        <View style={{width:dw,height:100,backgroundColor:'red'}}>
-                            <View style={{width:dw,height:50,flexDirection:'row',justifyContent:'flex-start',alignItems:'flex-start'}}>
+                        <View style={{width:dw,height:245,backgroundColor:'transparent'}}>
+                            <View style={{width:70,height:70,left:100,borderRadius:70/2,top:150,backgroundColor:'white',position:'absolute'}}>
+                                <Text>孙红雷</Text>
+                            </View>
+                            <View style={{width:70,height:70,backgroundColor:'blue',marginLeft:30,marginTop:50,borderRadius:70/2,}}></View>
+                        </View>
+                        <Animated.View style={{width:dw,height:50,
+                            backgroundColor:'transparent'}}>
+                            <Animated.View style={{
+                                width:dw,
+                                height:50,
+                                transform: [{
+                                    translateY: this.state.scrollY.interpolate({
+                                        inputRange: [ 0, 255 ],
+                                        outputRange: [ 0, 44],
+                                        extrapolate: 'clamp',
+                                    })
+                                }],
+                                flexDirection:'row',
+                                justifyContent:'flex-start',
+                                alignItems:'flex-start'}}>
                                 <TouchableWithoutFeedback onPress={this.click}>
                                 <View style={{width:dw/3,height:50,flexDirection:'row',backgroundColor:'blue',justifyContent:'center',alignItems:'center'}}>
                                     <Text>龙龟</Text>
@@ -49,13 +69,13 @@ export default class CrowdScroll extends Component{
                                 <View style={{width:dw/3,height:50,flexDirection:'row',backgroundColor:'yellow',justifyContent:'center',alignItems:'center'}}>
                                     <Text>哈士奇</Text>
                                 </View>
-                            </View>
-                        </View>
+                            </Animated.View>
+                        </Animated.View>
                         {this.renderChird()}
                     </Animated.ScrollView>
                     <Animated.View style={{
                                 opacity: this.state.scrollY.interpolate({
-                                    inputRange: [0, 255],
+                                    inputRange: [0, 155],
                                     outputRange: [0, 1, ], // -255: 2, 0: 1, 255: 1  当scrollY在-255到0时，scale按照2-1的动画运动；当scrollY在0-255时，scale不变。可以输入任意数量对应的值，但必须是递增或者相等
                                     extrapolate: 'clamp',
                                 }),
@@ -75,12 +95,14 @@ export default class CrowdScroll extends Component{
         if(this.state.isSelect==0)
         return(
             <View>
-                <View style={{width:dw,height:50,backgroundColor:'green'}}/>
+                <View style={{width:dw,height:100,backgroundColor:'green'}}/>
                 <View style={{width:dw,height:100,backgroundColor:'blue'}}/>
                 <View style={{width:dw,height:100,backgroundColor:'red'}}/>
                 <View style={{width:dw,height:100,backgroundColor:'green'}}/>
                 <View style={{width:dw,height:100,backgroundColor:'red'}}/>
-                <View style={{width:dw,height:500,backgroundColor:'blue'}}/>
+                <View style={{width:dw,height:200,backgroundColor:'blue',justifyContent:'flex-end'}}>
+                    <View style={{width:dw,height:50,backgroundColor:'white'}}></View>
+                </View>
             </View>
             )
         return(
@@ -104,7 +126,7 @@ export default class CrowdScroll extends Component{
                         transform: [ {
                             translateY: scrollY.interpolate({
                                 inputRange: [-255, 0, 255 - 44],
-                                outputRange: [0 , 0, -(255 - 44-44) ],
+                                outputRange: [0 , 0, -(255 -88) ],
                                 extrapolate: 'clamp',
                             })
                         },
@@ -115,16 +137,30 @@ export default class CrowdScroll extends Component{
                         //         extrapolate: 'clamp',
                         //     })
                         // },
+                        //     {
+                        //        scale: scrollY.interpolate({
+                        //             inputRange: [-255, 0, 0],
+                        //             outputRange: [3, 1, 1], // -255: 2, 0: 1, 255: 1  当scrollY在-255到0时，scale按照2-1的动画运动；当scrollY在0-255时，scale不变。可以输入任意数量对应的值，但必须是递增或者相等
+                        //             extrapolate: 'clamp',
+                        //         })
+                        //     }
+                            ]
+                    }]}>
+                    <Animated.Image style={{
+                        height: 255,
+                        width:dw,
+                        backgroundColor:'blue',
+                        transform: [
                             {
-                               scale: scrollY.interpolate({
+                                scale: scrollY.interpolate({
                                     inputRange: [-255, 0, 0],
                                     outputRange: [3, 1, 1], // -255: 2, 0: 1, 255: 1  当scrollY在-255到0时，scale按照2-1的动画运动；当scrollY在0-255时，scale不变。可以输入任意数量对应的值，但必须是递增或者相等
                                     extrapolate: 'clamp',
                                 })
                             }
-                            ]
-                    }]}>
-                    <Image style={{height: 255,width:dw,backgroundColor:'blue'}} source={{uri: ImageData}}
+                        ]
+
+                    }} source={{uri: ImageData}}
                     />
                 </Animated.View>
             )
